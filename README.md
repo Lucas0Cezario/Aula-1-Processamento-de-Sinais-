@@ -2,7 +2,7 @@
 
 Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais e compressão de sinais.
 
-**Autor:** CAIO e LUCAS
+**Autor:** Caio e Lucas
 **Linguagem:** Python 3 (Jupyter Notebook / Google Colab)
 
 ---
@@ -140,10 +140,10 @@ Projeto e análise de sistemas LTI no domínio Z, incluindo filtros inversos, *c
 
 | Questão | Tópico                                                                                                                                                                                                          |
 | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1**   | Análise de $H(z) = 1 + 0{,}49z^{-2} + 0{,}2401z^{-6} - 0{,}0576z^{-8} - 0{,}0282z^{-10} - 0{,}0138z^{-12}$ — resposta em frequência e diagrama de polos e zeros                                                 |
+| **1**   | Análise de $H(z) = 1 + 0,49\,z^{-2} + 0,2401\,z^{-6} - 0,0576\,z^{-8} - 0,0282\,z^{-10} - 0,0138\,z^{-12}$ — resposta em frequência e diagrama de polos e zeros                                                 |
 | **2**   | Aplicação de $H(z)$ ao sinal `handel.wav` e análise do espectro filtrado                                                                                                                                        |
 | **3**   | Projeto do **filtro inverso $G(z) = 1/H(z)$** para recuperação do sinal — análise de estabilidade                                                                                                               |
-| **4**   | **Comb filter** $H(z) = \dfrac{1 - z^{-L}}{1 - a z^{-L}}$ para $a \in \{0{,}7;\; 0{,}9\}$ e $L \in \{1, 4, 10\}$                                                                                                |
+| **4**   | **Comb filter** $H(z) = \dfrac{1 - z^{-L}}{1 - a z^{-L}}$ para $a \in \{0,7;\ 0,9\}$ e $L \in \{1, 4, 10\}$                                                                                                     |
 | **5**   | Aplicação do *comb filter* ao `handel.wav` — visualização das atenuações nas frequências dos zeros                                                                                                              |
 | **6**   | Filtros de recuperação para os sistemas da Q4 — análise da estabilidade marginal (zeros sobre o círculo unitário)                                                                                               |
 | **7**   | **Aproximações FIR** dos filtros IIR das Q3 e Q6 — relação ordem do filtro × MSE do sinal recuperado                                                                                                            |
@@ -154,13 +154,13 @@ Projeto e análise de sistemas LTI no domínio Z, incluindo filtros inversos, *c
 
 Estudo da Transformada Discreta de Fourier e da Transformada Discreta de Cossenos com aplicação em compressão de áudio (1D) e imagens (2D).
 
-| Questão | Tópico                                                                                                                                                    |
-| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1**   | Comparação **DFT × DTFT** para o sinal $x[n] = \delta[n] - \delta[n-1] + \delta[n-2] - \delta[n-3]$ com $N \in \{4, 16, 64, 1024\}$                       |
-| **2**   | **Resolução da DFT** e **zero-padding**: distinção entre senoides próximas ($1{,}0$ Hz e $1{,}1$ Hz) com diferentes tamanhos de DFT                       |
-| **3**   | **Compressão 1D do `handel.wav`** com DFT e DCT, para fatores de energia $r \in \{99{,}5\%; 99{,}0\%; 90{,}0\%; 75{,}0\%; 50{,}0\%\}$ — comparação de MSE |
-| **4**   | **DCT 2D** aplicada à imagem `sosias.jpg` — análise de compactação de energia                                                                             |
-| **5**   | **Compressão por blocos $L \times L$** (esquema JPEG) com $L \in \{8, 16, 32, 64\}$ e diferentes taxas de retenção                                        |
+| Questão | Tópico                                                                                                                                                                |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1**   | Comparação **DFT × DTFT** para o sinal $x[n] = \delta[n] - \delta[n-1] + \delta[n-2] - \delta[n-3]$ com $N \in \{4, 16, 64, 1024\}$                                   |
+| **2**   | **Resolução da DFT** e **zero-padding**: distinção entre senoides próximas (1,0 Hz e 1,1 Hz) com diferentes tamanhos de DFT                                           |
+| **3**   | **Compressão 1D do `handel.wav`** com DFT e DCT, para fatores de energia $r$ ∈ {99,5%; 99,0%; 90,0%; 75,0%; 50,0%} — comparação de MSE                                |
+| **4**   | **DCT 2D** aplicada à imagem `sosias.jpg` — análise de compactação de energia                                                                                         |
+| **5**   | **Compressão por blocos $L \times L$** (esquema JPEG) com $L \in \{8, 16, 32, 64\}$ e diferentes taxas de retenção                                                    |
 
 ---
 
