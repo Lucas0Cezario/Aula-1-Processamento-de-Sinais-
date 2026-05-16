@@ -1,8 +1,8 @@
 # Processamento Digital de Sinais — Lista de Exercícios
 
-Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais e compressão de sinais.
+Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais, compressão de sinais, sistemas CDMA e análise por wavelets.
 
-**Autor:** Caio e Lucas
+**Autor:** Lucas Oliveira E Caio Nogueira — Engenharia, CEFET-RJ
 **Linguagem:** Python 3 (Jupyter Notebook / Google Colab)
 
 ---
@@ -19,21 +19,23 @@ Repositório com a resolução dos exercícios práticos da disciplina de **Proc
   - [Aula 2 — Análise Espectral e Amostragem](#aula-2--análise-espectral-e-amostragem)
   - [Aula 3 — Sistemas LTI, Polos e Zeros, Filtros Digitais](#aula-3--sistemas-lti-polos-e-zeros-filtros-digitais)
   - [Aula 4 — DFT, DCT e Compressão de Sinais](#aula-4--dft-dct-e-compressão-de-sinais)
-- [Arquivos de Áudio e Imagem Utilizados](#arquivos-de-áudio-e-imagem-utilizados)
+  - [Aula 5 — Transformada de Hadamard, CDMA e Wavelets](#aula-5--transformada-de-hadamard-cdma-e-wavelets)
+- [Arquivos de Mídia e Dados Utilizados](#arquivos-de-mídia-e-dados-utilizados)
 - [Observações](#observações)
 
 ---
 
 ## Visão Geral
 
-Este repositório consolida quatro listas de exercícios que percorrem, de forma incremental, os principais conceitos do Processamento Digital de Sinais:
+Este repositório consolida cinco listas de exercícios que percorrem, de forma incremental, os principais conceitos do Processamento Digital de Sinais:
 
-| Aula   | Tema Central                                      | Foco Prático                                  |
-| ------ | ------------------------------------------------- | --------------------------------------------- |
-| Aula 1 | Sinais no tempo, chirps, convolução acústica      | Geração e audição de sinais; reverberação     |
-| Aula 2 | FFT, Teorema de Nyquist, decimação e interpolação | Análise espectral; aliasing e *imaging*       |
-| Aula 3 | Sistemas LTI, polos e zeros, filtros IIR/FIR      | Projeto de filtros e recuperação de sinais    |
-| Aula 4 | DFT, DTFT e DCT                                   | Resolução espectral e compressão (1D e 2D)    |
+| Aula   | Tema Central                                      | Foco Prático                                       |
+| ------ | ------------------------------------------------- | -------------------------------------------------- |
+| Aula 1 | Sinais no tempo, chirps, convolução acústica      | Geração e audição de sinais; reverberação          |
+| Aula 2 | FFT, Teorema de Nyquist, decimação e interpolação | Análise espectral; aliasing e *imaging*            |
+| Aula 3 | Sistemas LTI, polos e zeros, filtros IIR/FIR      | Projeto de filtros e recuperação de sinais         |
+| Aula 4 | DFT, DTFT e DCT                                   | Resolução espectral e compressão (1D e 2D)         |
+| Aula 5 | Transformada de Hadamard, CDMA e Wavelets         | Multiplexação CDMA; análise multirresolução e *denoising* |
 
 Cada notebook contém o **enunciado da questão**, **código comentado**, **gráficos gerados** e a **discussão dos resultados** em células de texto markdown.
 
@@ -47,7 +49,8 @@ Cada notebook contém o **enunciado da questão**, **código comentado**, **grá
 ├── Aula_1_v2.ipynb     # Sinais no domínio do tempo
 ├── Aula_2_v2.ipynb     # Análise espectral e amostragem
 ├── Aula_3_v2.ipynb     # Sistemas LTI e filtros digitais
-└── Aula_4_v2.ipynb     # DFT, DCT e compressão
+├── Aula_4_v2.ipynb     # DFT, DCT e compressão
+└── Aula_5_V2.ipynb     # Transformada de Hadamard, CDMA e wavelets
 ```
 
 ---
@@ -57,34 +60,38 @@ Cada notebook contém o **enunciado da questão**, **código comentado**, **grá
 Os notebooks foram desenvolvidos para o **Google Colab**, mas podem ser executados localmente com Jupyter. As principais bibliotecas utilizadas são:
 
 ```bash
-pip install numpy scipy matplotlib opencv-python ipython
+pip install numpy scipy matplotlib opencv-python ipython PyWavelets PyMuPDF
 ```
 
 Bibliotecas e módulos por aula:
 
 - **NumPy** — operações vetoriais e geração de sinais
-- **SciPy** — `scipy.signal` (chirp, lfilter, freqz, tf2zpk, resample), `scipy.io.wavfile` (leitura de áudio), `scipy.fft` / `scipy.fftpack` (FFT e DCT)
+- **SciPy** — `scipy.signal` (chirp, lfilter, freqz, tf2zpk, resample), `scipy.io` / `scipy.io.wavfile` (leitura de áudio e arquivos `.mat`), `scipy.fft` / `scipy.fftpack` (FFT, IFFT e DCT), `scipy.linalg.hadamard` (matrizes de Hadamard — Aula 5)
 - **Matplotlib** — visualização de sinais, espectros e diagramas de polos e zeros
 - **IPython.display.Audio** — reprodução de áudio dentro do notebook
 - **OpenCV (`cv2`)** — leitura e processamento da imagem na Aula 4
+- **PyWavelets (`pywt`)** — decomposição e reconstrução por wavelets, *thresholding* (Aula 5)
+- **PyMuPDF (`fitz`)** — extração de texto de PDF para referência de enunciado (Aula 5)
 
 ---
 
 ## Recursos Externos
 
-Os arquivos de áudio (`.wav`) e a imagem (`.jpg`) utilizados ao longo das aulas, bem como a função auxiliar `calculate_spectrum()`, são disponibilizados pelo repositório oficial da disciplina:
+Os arquivos de áudio (`.wav`), imagem (`.jpg`), dados (`.mat`) e os scripts auxiliares utilizados ao longo das aulas são disponibilizados pelo repositório oficial da disciplina:
 
 - **Repositório base:** [rafaelschaves/gele7317-proc-sin](https://github.com/rafaelschaves/gele7317-proc-sin)
 - **Função `calculate_spectrum()`:** [calculate_spectrum.ipynb](https://github.com/rafaelschaves/gele7317-proc-sin/blob/master/calculate_spectrum.ipynb)
+- **Gerador de sinal não estacionário:** [non_stationary_signal.ipynb](https://github.com/rafaelschaves/gele7317-proc-sin)
+- **Sinal ruidoso para *denoising*:** `leleccum.mat` (no repositório base)
 
-A função `calculate_spectrum()` é amplamente referenciada nos enunciados das Aulas 2 e 3 e deve ser carregada/copiada antes da execução das células que dela dependem.
+A função `calculate_spectrum()` é amplamente referenciada nos enunciados das Aulas 2 e 3. Os recursos `non_stationary_signal.ipynb` e `leleccum.mat` são utilizados nas Questões 3 e 4 da Aula 5, respectivamente, e devem ser carregados antes da execução das células correspondentes.
 
 ---
 
 ## Como Executar
 
 **Opção 1 — Google Colab (recomendado):**
-Cada notebook possui um *badge* "Open in Colab" no topo. Basta clicar e executar célula a célula. Os arquivos `.wav` e `.jpg` (obtidos no [repositório base](https://github.com/rafaelschaves/gele7317-proc-sin)) devem ser carregados no ambiente do Colab via *upload* manual ou montagem do Google Drive antes de executar as células que os utilizam.
+Cada notebook possui um *badge* "Open in Colab" no topo. Basta clicar e executar célula a célula. Os arquivos de mídia/dados (obtidos no [repositório base](https://github.com/rafaelschaves/gele7317-proc-sin)) devem ser carregados no ambiente do Colab via *upload* manual ou montagem do Google Drive antes de executar as células que os utilizam. As bibliotecas `PyWavelets` e `PyMuPDF` são instaladas via `!pip install` dentro do próprio notebook da Aula 5.
 
 **Opção 2 — Execução local:**
 
@@ -94,7 +101,7 @@ cd <pasta-do-repositório>
 jupyter notebook
 ```
 
-Garanta que os arquivos de mídia (`handel.wav`, `h_banheiro.wav`, `sinal_taca.wav`, `sosias.jpg`) e o `calculate_spectrum.ipynb` estejam no mesmo diretório dos notebooks ou ajuste os caminhos no código.
+Garanta que os arquivos de mídia/dados (`handel.wav`, `h_banheiro.wav`, `sinal_taca.wav`, `sosias.jpg`, `leleccum.mat`) e os scripts auxiliares (`calculate_spectrum.ipynb`, `non_stationary_signal.ipynb`) estejam acessíveis ou ajuste os caminhos no código.
 
 ---
 
@@ -164,7 +171,46 @@ Estudo da Transformada Discreta de Fourier e da Transformada Discreta de Cosseno
 
 ---
 
-## Arquivos de Áudio e Imagem Utilizados
+### Aula 5 — Transformada de Hadamard, CDMA e Wavelets
+
+Aplicação da Transformada de Hadamard na multiplexação de sistemas CDMA (base do 3G) e estudo das Transformadas de Wavelets para análise multirresolução e remoção de ruído. Utiliza as bibliotecas `scipy.linalg.hadamard` e `PyWavelets`.
+
+**Questão 1 — Transformada de Hadamard e Sistemas CDMA**
+
+| Item    | Tópico                                                                                                                                          |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **(a)** | Geração de sequências $m_k[n] \in \{-1, 1\}$ (3 usuários, comprimento 8) e codificação com código de Hadamard — sinais, códigos e espectros     |
+| **(b)** | Construção do sinal recebido $y[n] = x_1[n] + x_2[n] + x_3[n] + w[n]$ com ruído AWGN para $\sigma^2$ ∈ {10⁻³, 10⁻², 10⁻¹, 1}                    |
+| **(c)** | Demonstração matemática (notação vetorial) da recuperação de $m_k[n]$ via produto interno e ortogonalidade dos códigos                          |
+| **(d)** | Estimativa $\hat{m}_k[n]$ e curva de probabilidade de erro em função de $\sigma^2$                                                              |
+| **(e)** | Efeito da distorção no código do receptor ($\hat{C} = C + W$) sobre $\hat{m}_k[n]$ — análise matemática                                         |
+| **(f)** | Comparação entre ruído de canal (AWGN) e distorção de código — interferência de múltiplos usuários (MUI) e impacto na BER                       |
+
+**Questão 2 — Transformadas de Wavelets (teórica)**
+
+Resumo sobre as Transformadas de Wavelets, suas características (resolução variável, localização tempo-frequência) e aplicações em processamento de sinais.
+
+**Questão 3 — Wavelets em Sinais Não Estacionários**
+
+| Item    | Tópico                                                                                                                |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
+| **(a)** | Explicação do sinal gerado pelo script `non_stationary_signal.ipynb` (senoides com mudança de frequência no tempo)    |
+| **(b)** | Decomposição com a wavelet 7–9 (`bior4.4`) — coeficientes dos filtros de análise e de síntese                         |
+| **(c)** | Transformada de wavelet de cinco estágios — análise dos coeficientes de aproximação e detalhe                         |
+
+**Questão 4 — Remoção de Ruído (Denoising) com Wavelets**
+
+| Item    | Tópico                                                                                                                |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
+| **(a)** | Sinal `leleccum.mat` no tempo e seu espectro                                                                          |
+| **(b)** | Decomposição com Daubechies-4 (`db4`) — coeficientes dos filtros de análise e de síntese                              |
+| **(c)** | Transformada de wavelet de cinco estágios — subfaixas de detalhe e coeficientes de aproximação                        |
+| **(d)** | *Denoising* por *thresholding* dos coeficientes wavelet (limiar suave)                                                |
+| **(e)** | Comparação entre *denoising* por wavelet e por DFT — fenômeno de Gibbs e localização temporal                         |
+
+---
+
+## Arquivos de Mídia e Dados Utilizados
 
 Todos os arquivos abaixo estão disponíveis no repositório base da disciplina: [rafaelschaves/gele7317-proc-sin](https://github.com/rafaelschaves/gele7317-proc-sin).
 
@@ -173,7 +219,8 @@ Todos os arquivos abaixo estão disponíveis no repositório base da disciplina:
 | `handel.wav`       | Trecho do *Hallelujah Chorus* de Händel — sinal musical de referência              |
 | `h_banheiro.wav`   | Resposta ao impulso (RIR) medida em um banheiro — usada para simulação acústica    |
 | `sinal_taca.wav`   | Som de uma taça de cristal — sinal com forte componente tonal e decaimento longo   |
-| `sosias.jpg`       | Imagem em tons de cinza utilizada nas análises 2D com DCT                          |
+| `sosias.jpg`       | Imagem em tons de cinza utilizada nas análises 2D com DCT (Aula 4)                 |
+| `leleccum.mat`     | Sinal ruidoso de consumo elétrico — usado nos exercícios de *denoising* (Aula 5)  |
 
 ---
 
@@ -181,4 +228,5 @@ Todos os arquivos abaixo estão disponíveis no repositório base da disciplina:
 
 - Todas as discussões e análises dos resultados estão escritas em **células markdown** dentro dos notebooks, logo após o código correspondente.
 - Os notebooks utilizam **MathJax/LaTeX** para a notação matemática. Para melhor visualização, recomenda-se abri-los no Jupyter ou no Google Colab.
-- Cada exercício é autocontido e pode ser executado de forma independente dos demais, desde que os recursos externos (`calculate_spectrum.ipynb` e arquivos de mídia) estejam disponíveis.
+- A Aula 5 instala as dependências `PyWavelets` e `PyMuPDF` via `!pip install` em tempo de execução; não é necessário instalá-las previamente no Colab.
+- Cada exercício é autocontido e pode ser executado de forma independente dos demais, desde que os recursos externos (scripts auxiliares e arquivos de mídia/dados) estejam disponíveis.
