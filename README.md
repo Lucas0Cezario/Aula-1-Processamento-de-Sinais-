@@ -2,7 +2,7 @@
 
 Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais, compressão de sinais, sistemas CDMA e análise por wavelets.
 
-**Autor:** Lucas — Engenharia, CEFET-RJ
+**Autor:** Lucas Oliveira E Caio Nogueira — Engenharia, CEFET-RJ
 **Linguagem:** Python 3 (Jupyter Notebook / Google Colab)
 
 ---
