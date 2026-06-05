@@ -1,8 +1,8 @@
 # Processamento Digital de Sinais — Lista de Exercícios
 
-Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais, compressão de sinais, sistemas CDMA e análise por wavelets.
+Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais, compressão de sinais, sistemas CDMA, análise por wavelets e projeto de filtros IIR por blocos de 2ª ordem.
 
-**Autor:** Lucas Oliveira E Caio Nogueira — Engenharia, CEFET-RJ
+**Autor:** Lucas — Engenharia, CEFET-RJ
 **Linguagem:** Python 3 (Jupyter Notebook / Google Colab)
 
 ---
@@ -20,6 +20,7 @@ Repositório com a resolução dos exercícios práticos da disciplina de **Proc
   - [Aula 3 — Sistemas LTI, Polos e Zeros, Filtros Digitais](#aula-3--sistemas-lti-polos-e-zeros-filtros-digitais)
   - [Aula 4 — DFT, DCT e Compressão de Sinais](#aula-4--dft-dct-e-compressão-de-sinais)
   - [Aula 5 — Transformada de Hadamard, CDMA e Wavelets](#aula-5--transformada-de-hadamard-cdma-e-wavelets)
+  - [Aula 6 — Filtros IIR por Blocos de 2ª Ordem](#aula-6--filtros-iir-por-blocos-de-2ª-ordem)
 - [Arquivos de Mídia e Dados Utilizados](#arquivos-de-mídia-e-dados-utilizados)
 - [Observações](#observações)
 
@@ -27,15 +28,16 @@ Repositório com a resolução dos exercícios práticos da disciplina de **Proc
 
 ## Visão Geral
 
-Este repositório consolida cinco listas de exercícios que percorrem, de forma incremental, os principais conceitos do Processamento Digital de Sinais:
+Este repositório consolida seis listas de exercícios que percorrem, de forma incremental, os principais conceitos do Processamento Digital de Sinais:
 
-| Aula   | Tema Central                                      | Foco Prático                                       |
-| ------ | ------------------------------------------------- | -------------------------------------------------- |
-| Aula 1 | Sinais no tempo, chirps, convolução acústica      | Geração e audição de sinais; reverberação          |
-| Aula 2 | FFT, Teorema de Nyquist, decimação e interpolação | Análise espectral; aliasing e *imaging*            |
-| Aula 3 | Sistemas LTI, polos e zeros, filtros IIR/FIR      | Projeto de filtros e recuperação de sinais         |
-| Aula 4 | DFT, DTFT e DCT                                   | Resolução espectral e compressão (1D e 2D)         |
+| Aula   | Tema Central                                      | Foco Prático                                              |
+| ------ | ------------------------------------------------- | --------------------------------------------------------- |
+| Aula 1 | Sinais no tempo, chirps, convolução acústica      | Geração e audição de sinais; reverberação                 |
+| Aula 2 | FFT, Teorema de Nyquist, decimação e interpolação | Análise espectral; aliasing e *imaging*                   |
+| Aula 3 | Sistemas LTI, polos e zeros, filtros IIR/FIR      | Projeto de filtros e recuperação de sinais                |
+| Aula 4 | DFT, DTFT e DCT                                   | Resolução espectral e compressão (1D e 2D)                |
 | Aula 5 | Transformada de Hadamard, CDMA e Wavelets         | Multiplexação CDMA; análise multirresolução e *denoising* |
+| Aula 6 | Filtros IIR por blocos de 2ª ordem (SOS)          | Projeto, cascata/paralelo, quantização e remoção de interferências |
 
 Cada notebook contém o **enunciado da questão**, **código comentado**, **gráficos gerados** e a **discussão dos resultados** em células de texto markdown.
 
@@ -50,7 +52,8 @@ Cada notebook contém o **enunciado da questão**, **código comentado**, **grá
 ├── Aula_2_v2.ipynb     # Análise espectral e amostragem
 ├── Aula_3_v2.ipynb     # Sistemas LTI e filtros digitais
 ├── Aula_4_v2.ipynb     # DFT, DCT e compressão
-└── Aula_5_V2.ipynb     # Transformada de Hadamard, CDMA e wavelets
+├── Aula_5_V2.ipynb     # Transformada de Hadamard, CDMA e wavelets
+└── Aula_6_v1.ipynb     # Filtros IIR por blocos de 2ª ordem
 ```
 
 ---
@@ -66,7 +69,7 @@ pip install numpy scipy matplotlib opencv-python ipython PyWavelets PyMuPDF
 Bibliotecas e módulos por aula:
 
 - **NumPy** — operações vetoriais e geração de sinais
-- **SciPy** — `scipy.signal` (chirp, lfilter, freqz, tf2zpk, resample), `scipy.io` / `scipy.io.wavfile` (leitura de áudio e arquivos `.mat`), `scipy.fft` / `scipy.fftpack` (FFT, IFFT e DCT), `scipy.linalg.hadamard` (matrizes de Hadamard — Aula 5)
+- **SciPy** — `scipy.signal` (chirp, lfilter, freqz, tf2zpk, resample, sosfilt, sos2tf — Aula 6), `scipy.io` / `scipy.io.wavfile` (leitura de áudio e arquivos `.mat`), `scipy.fft` / `scipy.fftpack` (FFT, IFFT e DCT), `scipy.linalg.hadamard` (matrizes de Hadamard — Aula 5)
 - **Matplotlib** — visualização de sinais, espectros e diagramas de polos e zeros
 - **IPython.display.Audio** — reprodução de áudio dentro do notebook
 - **OpenCV (`cv2`)** — leitura e processamento da imagem na Aula 4
@@ -84,7 +87,7 @@ Os arquivos de áudio (`.wav`), imagem (`.jpg`), dados (`.mat`) e os scripts aux
 - **Gerador de sinal não estacionário:** [non_stationary_signal.ipynb](https://github.com/rafaelschaves/gele7317-proc-sin)
 - **Sinal ruidoso para *denoising*:** `leleccum.mat` (no repositório base)
 
-A função `calculate_spectrum()` é amplamente referenciada nos enunciados das Aulas 2 e 3. Os recursos `non_stationary_signal.ipynb` e `leleccum.mat` são utilizados nas Questões 3 e 4 da Aula 5, respectivamente, e devem ser carregados antes da execução das células correspondentes.
+A função `calculate_spectrum()` é amplamente referenciada nos enunciados das Aulas 2 e 3. Os recursos `non_stationary_signal.ipynb` e `leleccum.mat` são utilizados nas Questões 3 e 4 da Aula 5, respectivamente. A Aula 6 reaproveita o `handel.wav` do repositório base na Questão 5.
 
 ---
 
@@ -210,17 +213,58 @@ Resumo sobre as Transformadas de Wavelets, suas características (resolução va
 
 ---
 
+### Aula 6 — Filtros IIR por Blocos de 2ª Ordem
+
+Projeto de filtros IIR a partir de **blocos componentes básicos de 2ª ordem** (*Second-Order Sections* — SOS) com $f_s = 20$ kHz. Análise da resposta em frequência, diagrama de polos e zeros, efeito do parâmetro $r$ na seletividade/estabilidade/largura de banda, e impacto da **quantização de coeficientes** sobre a estabilidade numérica.
+
+**Questão 1 — Blocos Básicos de 2ª Ordem**
+
+| Item    | Tópico                                                                                                                                          |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **(a)** | **Passa-baixas** com $f_c = 1000$ Hz — função de transferência, resposta em frequência, polos e zeros, variação de $r$                          |
+| **(b)** | **Passa-altas** com $f_c = 2000$ Hz                                                                                                             |
+| **(c)** | **Passa-faixas** com $f_c = 7000$ Hz                                                                                                            |
+| **(d)** | **Notch** (rejeita-banda) com $f_c = 3000$ Hz                                                                                                   |
+
+**Questão 2 — Passa-Faixas em Cascata**
+
+Projeto de um filtro passa-faixas com $f_{c1} = 6000$ Hz e $f_{c2} = 8000$ Hz utilizando **cascata de blocos de 2ª ordem**. Comparação com o passa-faixas de bloco único da Questão 1, evidenciando a banda passante mais larga e a maior inclinação de corte.
+
+**Questão 3 — Rejeita-Faixas em Paralelo**
+
+Projeto de um filtro rejeita-faixas com $f_{c1} = 1000$ Hz e $f_{c2} = 4000$ Hz utilizando **associação em paralelo de blocos de 2ª ordem**. Comparação com o Notch simples da Questão 1, mostrando a criação de dois nulos espectrais e a alteração na distribuição dos zeros.
+
+**Questão 4 — Quantização de Coeficientes**
+
+Quantização dos coeficientes em $b \in \{2, 4, 8, 16, 32\}$ bits dos filtros das Questões 2 e 3, aplicada de duas formas: (i) no filtro resultante e (ii) em cada bloco individualmente. Avaliação da sensibilidade numérica, estabilidade (possível deslocamento de polos para fora do círculo unitário) e da vantagem do projeto por SOS.
+
+**Questão 5 — Remoção de Interferências em Áudio**
+
+Aplicação prática dos filtros IIR em cascata ao sinal `handel.wav` contaminado por $y(t) = x(t) + 0{,}05\cos(200\pi t) + 0{,}075\sin(4000\pi t) + n(t)$, onde $n(t)$ é ruído branco com variância $\sigma^2$ variável.
+
+| Item    | Tópico                                                                                                                |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
+| **(a)** | Geração e comparação do sinal contaminado $y(t)$ no tempo e na frequência para diferentes $\sigma^2$                  |
+| **(b)** | Análise espectral e estratégia de filtragem (Notch para tons em 100 Hz e 2 kHz; limitações para o ruído branco)       |
+| **(c)** | Projeto do sistema em cascata (SOS) com dois filtros Notch de 2ª ordem                                                |
+| **(d)** | Aplicação do sistema $H_{sys}(z)$ ao sinal contaminado                                                                |
+| **(e)** | Avaliação quantitativa: **SNR** (dB) e **MSE** entre o sinal original e o recuperado                                  |
+| **(f)** | Avaliação subjetiva (inteligibilidade, distorções, atenuação de interferências, ruído residual)                       |
+| **(g)** | Quantização dos coeficientes (2, 4, 8, 16 bits) no sistema projetado — vantagens da arquitetura SOS em hardware DSP   |
+
+---
+
 ## Arquivos de Mídia e Dados Utilizados
 
 Todos os arquivos abaixo estão disponíveis no repositório base da disciplina: [rafaelschaves/gele7317-proc-sin](https://github.com/rafaelschaves/gele7317-proc-sin).
 
-| Arquivo            | Descrição                                                                          |
-| ------------------ | ---------------------------------------------------------------------------------- |
-| `handel.wav`       | Trecho do *Hallelujah Chorus* de Händel — sinal musical de referência              |
-| `h_banheiro.wav`   | Resposta ao impulso (RIR) medida em um banheiro — usada para simulação acústica    |
-| `sinal_taca.wav`   | Som de uma taça de cristal — sinal com forte componente tonal e decaimento longo   |
-| `sosias.jpg`       | Imagem em tons de cinza utilizada nas análises 2D com DCT (Aula 4)                 |
-| `leleccum.mat`     | Sinal ruidoso de consumo elétrico — usado nos exercícios de *denoising* (Aula 5)  |
+| Arquivo            | Descrição                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------------- |
+| `handel.wav`       | Trecho do *Hallelujah Chorus* de Händel — sinal musical de referência (Aulas 1, 2, 3, 4, 6) |
+| `h_banheiro.wav`   | Resposta ao impulso (RIR) medida em um banheiro — usada para simulação acústica          |
+| `sinal_taca.wav`   | Som de uma taça de cristal — sinal com forte componente tonal e decaimento longo         |
+| `sosias.jpg`       | Imagem em tons de cinza utilizada nas análises 2D com DCT (Aula 4)                       |
+| `leleccum.mat`     | Sinal ruidoso de consumo elétrico — usado nos exercícios de *denoising* (Aula 5)         |
 
 ---
 
@@ -229,4 +273,5 @@ Todos os arquivos abaixo estão disponíveis no repositório base da disciplina:
 - Todas as discussões e análises dos resultados estão escritas em **células markdown** dentro dos notebooks, logo após o código correspondente.
 - Os notebooks utilizam **MathJax/LaTeX** para a notação matemática. Para melhor visualização, recomenda-se abri-los no Jupyter ou no Google Colab.
 - A Aula 5 instala as dependências `PyWavelets` e `PyMuPDF` via `!pip install` em tempo de execução; não é necessário instalá-las previamente no Colab.
+- A Aula 6 utiliza a representação **SOS** (*Second-Order Sections*) do `scipy.signal` para garantir estabilidade numérica em projetos de filtros IIR de ordem elevada.
 - Cada exercício é autocontido e pode ser executado de forma independente dos demais, desde que os recursos externos (scripts auxiliares e arquivos de mídia/dados) estejam disponíveis.
