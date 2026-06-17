@@ -1,6 +1,6 @@
 # Processamento Digital de Sinais — Lista de Exercícios
 
-Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais, compressão de sinais, sistemas CDMA, análise por wavelets e projeto de filtros IIR por blocos de 2ª ordem.
+Repositório com a resolução dos exercícios práticos da disciplina de **Processamento Digital de Sinais (PDS)**, implementados em Python sobre Jupyter Notebooks executáveis no Google Colab. Cada aula aborda um conjunto temático específico, contemplando geração de gráficos no domínio do tempo e da frequência, manipulação de áudio (`.wav`), análise espectral, projeto de filtros digitais (IIR e FIR), compressão de sinais, sistemas CDMA e análise por wavelets.
 
 **Autor:** Lucas — Engenharia, CEFET-RJ
 **Linguagem:** Python 3 (Jupyter Notebook / Google Colab)
@@ -21,6 +21,7 @@ Repositório com a resolução dos exercícios práticos da disciplina de **Proc
   - [Aula 4 — DFT, DCT e Compressão de Sinais](#aula-4--dft-dct-e-compressão-de-sinais)
   - [Aula 5 — Transformada de Hadamard, CDMA e Wavelets](#aula-5--transformada-de-hadamard-cdma-e-wavelets)
   - [Aula 6 — Filtros IIR por Blocos de 2ª Ordem](#aula-6--filtros-iir-por-blocos-de-2ª-ordem)
+  - [Aula 7 — Filtros FIR pelo Método das Janelas](#aula-7--filtros-fir-pelo-método-das-janelas)
 - [Arquivos de Mídia e Dados Utilizados](#arquivos-de-mídia-e-dados-utilizados)
 - [Observações](#observações)
 
@@ -28,7 +29,7 @@ Repositório com a resolução dos exercícios práticos da disciplina de **Proc
 
 ## Visão Geral
 
-Este repositório consolida seis listas de exercícios que percorrem, de forma incremental, os principais conceitos do Processamento Digital de Sinais:
+Este repositório consolida sete listas de exercícios que percorrem, de forma incremental, os principais conceitos do Processamento Digital de Sinais:
 
 | Aula   | Tema Central                                      | Foco Prático                                              |
 | ------ | ------------------------------------------------- | --------------------------------------------------------- |
@@ -38,6 +39,7 @@ Este repositório consolida seis listas de exercícios que percorrem, de forma i
 | Aula 4 | DFT, DTFT e DCT                                   | Resolução espectral e compressão (1D e 2D)                |
 | Aula 5 | Transformada de Hadamard, CDMA e Wavelets         | Multiplexação CDMA; análise multirresolução e *denoising* |
 | Aula 6 | Filtros IIR por blocos de 2ª ordem (SOS)          | Projeto, cascata/paralelo, quantização e remoção de interferências |
+| Aula 7 | Filtros FIR pelo método das janelas               | Implementação manual; janelas, recuperação de áudio e quantização |
 
 Cada notebook contém o **enunciado da questão**, **código comentado**, **gráficos gerados** e a **discussão dos resultados** em células de texto markdown.
 
@@ -53,7 +55,8 @@ Cada notebook contém o **enunciado da questão**, **código comentado**, **grá
 ├── Aula_3_v2.ipynb     # Sistemas LTI e filtros digitais
 ├── Aula_4_v2.ipynb     # DFT, DCT e compressão
 ├── Aula_5_V2.ipynb     # Transformada de Hadamard, CDMA e wavelets
-└── Aula_6_v1.ipynb     # Filtros IIR por blocos de 2ª ordem
+├── Aula_6_v1.ipynb     # Filtros IIR por blocos de 2ª ordem
+└── Aula_7_v1.ipynb     # Filtros FIR pelo método das janelas
 ```
 
 ---
@@ -69,12 +72,14 @@ pip install numpy scipy matplotlib opencv-python ipython PyWavelets PyMuPDF
 Bibliotecas e módulos por aula:
 
 - **NumPy** — operações vetoriais e geração de sinais
-- **SciPy** — `scipy.signal` (chirp, lfilter, freqz, tf2zpk, resample, sosfilt, sos2tf — Aula 6), `scipy.io` / `scipy.io.wavfile` (leitura de áudio e arquivos `.mat`), `scipy.fft` / `scipy.fftpack` (FFT, IFFT e DCT), `scipy.linalg.hadamard` (matrizes de Hadamard — Aula 5)
+- **SciPy** — `scipy.signal` (chirp, lfilter, freqz, tf2zpk, resample, sosfilt, sos2tf), `scipy.io` / `scipy.io.wavfile` (leitura de áudio e arquivos `.mat`), `scipy.fft` / `scipy.fftpack` (FFT, IFFT e DCT), `scipy.linalg.hadamard` (matrizes de Hadamard — Aula 5)
 - **Matplotlib** — visualização de sinais, espectros e diagramas de polos e zeros
 - **IPython.display.Audio** — reprodução de áudio dentro do notebook
 - **OpenCV (`cv2`)** — leitura e processamento da imagem na Aula 4
 - **PyWavelets (`pywt`)** — decomposição e reconstrução por wavelets, *thresholding* (Aula 5)
 - **PyMuPDF (`fitz`)** — extração de texto de PDF para referência de enunciado (Aula 5)
+
+> **Observação (Aulas 6 e 7):** o projeto dos filtros é feito com **implementação própria** (cálculo dos coeficientes a partir das equações), sem recorrer a funções prontas de projeto. As funções do `scipy.signal` são usadas apenas para apoio (filtragem, resposta em frequência e diagrama de polos e zeros).
 
 ---
 
@@ -87,7 +92,7 @@ Os arquivos de áudio (`.wav`), imagem (`.jpg`), dados (`.mat`) e os scripts aux
 - **Gerador de sinal não estacionário:** [non_stationary_signal.ipynb](https://github.com/rafaelschaves/gele7317-proc-sin)
 - **Sinal ruidoso para *denoising*:** `leleccum.mat` (no repositório base)
 
-A função `calculate_spectrum()` é amplamente referenciada nos enunciados das Aulas 2 e 3. Os recursos `non_stationary_signal.ipynb` e `leleccum.mat` são utilizados nas Questões 3 e 4 da Aula 5, respectivamente. A Aula 6 reaproveita o `handel.wav` do repositório base na Questão 5.
+A função `calculate_spectrum()` é amplamente referenciada nos enunciados das Aulas 2 e 3. Os recursos `non_stationary_signal.ipynb` e `leleccum.mat` são utilizados nas Questões 3 e 4 da Aula 5, respectivamente. As Aulas 6 e 7 reaproveitam o `handel.wav` do repositório base nos exercícios de remoção de interferências.
 
 ---
 
@@ -254,17 +259,56 @@ Aplicação prática dos filtros IIR em cascata ao sinal `handel.wav` contaminad
 
 ---
 
+### Aula 7 — Filtros FIR pelo Método das Janelas
+
+Projeto de **filtros FIR** pelo método do janelamento, com **implementação própria** (sem funções prontas de projeto), a $f_s = 20$ kHz. Estudo do efeito da ordem $M$ e do tipo de janela sobre a resposta em frequência, com aplicação à recuperação de áudio. As análises são comparadas com os resultados de filtros IIR da Aula 6.
+
+**Questão 1 — Projeto FIR por Janelamento**
+
+Projeto de filtros FIR de ordem $M \in \{20, 50, 100\}$ para as janelas **retangular, triangular, Bartlett, Hamming, Hann e Blackman**. Para cada caso, apresentam-se a resposta ao impulso, o diagrama de polos e zeros e a resposta em frequência.
+
+| Item    | Tópico                                                                  |
+| ------- | ----------------------------------------------------------------------- |
+| **(a)** | **Passa-baixas** com $f_c = 1000$ Hz                                    |
+| **(b)** | **Passa-altas** com $f_c = 2000$ Hz                                     |
+| **(c)** | **Passa-faixas** com $f_{c1} = 500$ Hz e $f_{c2} = 2000$ Hz             |
+| **(d)** | **Rejeita-faixas** com $f_{c1} = 1000$ Hz e $f_{c2} = 2500$ Hz          |
+
+**Questão 2 — Derivação a partir da Resposta de Módulo**
+
+Derivação da resposta ao impulso do filtro ideal a partir de uma resposta de módulo fornecida (figura do enunciado) e projeto de filtros FIR de ordem $M \in \{50, 100\}$ com as janelas retangular, triangular, Hamming, Hann e Blackman.
+
+| Item    | Tópico                                                                  |
+| ------- | ----------------------------------------------------------------------- |
+| **(a)** | **Passa-baixas** com $\omega_c = 0{,}5\pi$                              |
+| **(b)** | **Passa-altas** com $\omega_c = 0{,}5\pi$                               |
+| **(c)** | **Passa-faixas** entre $\omega_{c1} = 0{,}4\pi$ e $\omega_{c2} = 0{,}6\pi$ |
+
+**Questão 3 — Remoção de Interferências em Áudio com Filtros FIR**
+
+Aplicação dos filtros FIR projetados ao sinal `handel.wav` contaminado por $y(t) = x(t) + 0{,}05\cos(200\pi t) + 0{,}075\sin(4000\pi t) + n(t)$, com ruído branco de variância $\sigma^2 \in \{10^{-2}, 10^{-1}, 1\}$. Resultados comparados com a Aula 6.
+
+| Item    | Tópico                                                                                                                |
+| ------- | --------------------------------------------------------------------------------------------------------------------- |
+| **(a)** | Projeto do sistema de filtragem FIR para recuperar o sinal — diagrama de polos e zeros e resposta em frequência       |
+| **(b)** | Filtragem do sinal contaminado e comparação de $x(t)$, $y(t)$ e $\hat{x}(t)$ no tempo e na frequência                 |
+| **(c)** | Avaliação quantitativa: **SNR**, **MSE** e potência do ruído residual para os diferentes valores de $\sigma^2$        |
+| **(d)** | Avaliação subjetiva (inteligibilidade, distorções, atenuação de interferências, impacto do ruído residual)            |
+| **(e)** | Quantização dos coeficientes em $b \in \{2, 4, 8, 16\}$ bits — resposta em frequência, polos e zeros e estabilidade   |
+
+---
+
 ## Arquivos de Mídia e Dados Utilizados
 
 Todos os arquivos abaixo estão disponíveis no repositório base da disciplina: [rafaelschaves/gele7317-proc-sin](https://github.com/rafaelschaves/gele7317-proc-sin).
 
-| Arquivo            | Descrição                                                                                |
-| ------------------ | ---------------------------------------------------------------------------------------- |
-| `handel.wav`       | Trecho do *Hallelujah Chorus* de Händel — sinal musical de referência (Aulas 1, 2, 3, 4, 6) |
-| `h_banheiro.wav`   | Resposta ao impulso (RIR) medida em um banheiro — usada para simulação acústica          |
-| `sinal_taca.wav`   | Som de uma taça de cristal — sinal com forte componente tonal e decaimento longo         |
-| `sosias.jpg`       | Imagem em tons de cinza utilizada nas análises 2D com DCT (Aula 4)                       |
-| `leleccum.mat`     | Sinal ruidoso de consumo elétrico — usado nos exercícios de *denoising* (Aula 5)         |
+| Arquivo            | Descrição                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `handel.wav`       | Trecho do *Hallelujah Chorus* de Händel — sinal musical de referência (Aulas 1, 2, 3, 4, 6, 7) |
+| `h_banheiro.wav`   | Resposta ao impulso (RIR) medida em um banheiro — usada para simulação acústica             |
+| `sinal_taca.wav`   | Som de uma taça de cristal — sinal com forte componente tonal e decaimento longo            |
+| `sosias.jpg`       | Imagem em tons de cinza utilizada nas análises 2D com DCT (Aula 4)                          |
+| `leleccum.mat`     | Sinal ruidoso de consumo elétrico — usado nos exercícios de *denoising* (Aula 5)            |
 
 ---
 
@@ -274,4 +318,5 @@ Todos os arquivos abaixo estão disponíveis no repositório base da disciplina:
 - Os notebooks utilizam **MathJax/LaTeX** para a notação matemática. Para melhor visualização, recomenda-se abri-los no Jupyter ou no Google Colab.
 - A Aula 5 instala as dependências `PyWavelets` e `PyMuPDF` via `!pip install` em tempo de execução; não é necessário instalá-las previamente no Colab.
 - A Aula 6 utiliza a representação **SOS** (*Second-Order Sections*) do `scipy.signal` para garantir estabilidade numérica em projetos de filtros IIR de ordem elevada.
+- A Aula 7 projeta os filtros **FIR de forma manual** (cálculo da resposta ao impulso ideal e aplicação da janela), explorando o compromisso entre largura de banda de transição e atenuação na banda de rejeição (fenômeno de Gibbs).
 - Cada exercício é autocontido e pode ser executado de forma independente dos demais, desde que os recursos externos (scripts auxiliares e arquivos de mídia/dados) estejam disponíveis.
